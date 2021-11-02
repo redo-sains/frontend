@@ -31,9 +31,6 @@ export const addToCart = (product, newQty = 1) => {
       cart: { cartItems },
       auth,
     } = store.getState();
-    console.log("item cart");
-    console.log(cartItems);
-    console.log(store.getState(), "stateobject");
     //console.log('action::products', products);
     //const product = action.payload.product;
     //const products = state.products;
@@ -70,7 +67,6 @@ export const addToCart = (product, newQty = 1) => {
         payload: { cartItems },
       });
       if (res.status === 201) {
-        console.log("getDispatch");
         dispatch(getCartItems());
       }
     } else {

@@ -42,6 +42,11 @@ const WishlistPage = (props) => {
   }, [wishlist.wishlistItems]);
 
   useEffect(() => {
+    console.log("this wishlist");
+    console.log(wishlistItems);
+  }, [wishlistItems]);
+
+  useEffect(() => {
     if (auth.authenticate) {
       dispatch(getWishlistItems());
     }
@@ -49,13 +54,13 @@ const WishlistPage = (props) => {
 
   const onQuantityIncrement = (_id) => {
     //console.log({_id, qty});
-    const { name, price, img } = wishlistItems[_id];
-    dispatch(addToWishlist({ _id, name, price, img }, 1));
+    const { name, price, img, size, color } = wishlistItems[_id];
+    dispatch(addToWishlist({ _id, name, price, img, size, color }, 1));
   };
 
   const onQuantityDecrement = (_id) => {
-    const { name, price, img } = wishlistItems[_id];
-    dispatch(addToWishlist({ _id, name, price, img }, -1));
+    const { name, price, img, size, color } = wishlistItems[_id];
+    dispatch(addToWishlist({ _id, name, price, img, size, color }, -1));
   };
 
   const onRemovewishlistItem = (_id) => {
@@ -82,17 +87,25 @@ const WishlistPage = (props) => {
       <div className="wishlistContainer">
         <Card
           headerleft={`My wishlist`}
+          style={{ width: "100%" }}
           // headerRight={<div>Deliver to</div>}
         >
-          {Object.keys(wishlistItems).map((key, index) => (
-            <WishlistItem
-              key={index}
-              wishlistItem={wishlistItems[key]}
-              onQuantityInc={onQuantityIncrement}
-              onQuantityDec={onQuantityDecrement}
-              onRemovewishlistItem={onRemovewishlistItem}
-            />
-          ))}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-around",
+            }}>
+            {Object.keys(wishlistItems).map((key, index) => (
+              <WishlistItem
+                key={index}
+                wishlistItem={wishlistItems[key]}
+                onQuantityInc={onQuantityIncrement}
+                onQuantityDec={onQuantityDecrement}
+                onRemovewishlistItem={onRemovewishlistItem}
+              />
+            ))}
+          </div>
 
           <div className="wishlistPriceMobile">
             <div className="wishlistPriceMobileInner">
@@ -120,7 +133,7 @@ const WishlistPage = (props) => {
           <div id="pricemobiledetails"></div>
         </Card>
 
-        <PriceDetails
+        {/* <PriceDetails
           totalItem={Object.keys(wishlist.wishlistItems).reduce(function (
             qty,
             key
@@ -138,7 +151,7 @@ const WishlistPage = (props) => {
           onClick={() => props.history.push(`/checkout`)}
           reveal={wishlist.wishlistItems.length}
           title={`Place Order`}
-        />
+        /> */}
       </div>
     </Layout>
   );

@@ -72,7 +72,7 @@ const ClothingAndAccessories = (props) => {
               className="caImgContainer"
               to={`/${product.slug}/${product._id}/p`}
             >
-              <img src={generatePublicUrl(product.productPictures[0].img)} />
+              <img src={generatePublicUrl(product.productPictures[0])} />
             </Link>
             <div>
               <div className="caProductName">{product.name}</div>
@@ -203,7 +203,7 @@ const ClothingAndAccessories = (props) => {
          className="caImgContainer"
          to={`/${product.slug}/${product._id}/p`}
        >
-         <img src={generatePublicUrl(product.productPictures[0].img)} />
+         <img src={generatePublicUrl(product.productPictures[0])} />
        </Link>
        <div>
          <div className="caProductName">{product.name}</div>

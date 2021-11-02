@@ -69,7 +69,7 @@ const Kids = (props) => {
                   className="productContainer">
                   <div className="productImgContainer">
                     <img
-                      src={generatePublicUrl(product.productPictures[0].img)}
+                      src={generatePublicUrl(product.productPictures[0])}
                       alt=""
                     />
                   </div>

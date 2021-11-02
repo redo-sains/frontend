@@ -1,3 +1,5 @@
+/** @format */
+
 import React, { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { cancleOrder, getOrder } from "../../actions";
@@ -10,29 +12,27 @@ import "./style.css";
 import { FaArrowRight, FaChevronRight, FaRupeeSign } from "react-icons/fa";
 import { useMemo } from "react";
 
-
 /**
  * @author
  * @function OrderDetails
  **/
 
 const OrderDetailsPage = (props) => {
-
   const dispatch = useDispatch();
   const typeRef = useRef("");
   const orderDetails = useSelector((state) => state.user.orderDetails);
-  const auth = useSelector(state => state.auth);
-  const order = useSelector(state => state.user.orders);
+  const auth = useSelector((state) => state.auth);
+  const order = useSelector((state) => state.user.orders);
   const onCancleOrder = (orderId, productId) => {
     const payload = {
       orderId,
       productId,
-      type: typeRef.current
+      type: typeRef.current,
     };
     dispatch(cancleOrder(payload));
   };
 
-console.log(order, ">>user");
+  console.log(order, ">>user");
   console.log(orderDetails);
 
   useEffect(() => {
@@ -43,14 +43,12 @@ console.log(order, ">>user");
     dispatch(getOrder(payload));
   }, []);
 
-const cancleItem = useMemo(() => {
-  const {cancleOrder} = orderDetails;
-  let newCancleItem = cancleOrder ? cancleOrder[0] : {};
-  return newCancleItem;
-  // console.log(cancleItem);
- }, [orderDetails]);
-
- 
+  const cancleItem = useMemo(() => {
+    const { cancleOrder } = orderDetails;
+    let newCancleItem = cancleOrder ? cancleOrder[0] : {};
+    return newCancleItem;
+    // console.log(cancleItem);
+  }, [orderDetails]);
 
   const formatDate = (date) => {
     if (date) {
@@ -109,7 +107,7 @@ const cancleItem = useMemo(() => {
             <div className="detLowerContainer">
               <div className="delItemImgContainer">
                 <img
-                  src={generatePublicUrl(item.productId.productPictures[0].img)}
+                  src={generatePublicUrl(item.productId.productPictures[0])}
                   alt=""
                 />
               </div>
@@ -136,78 +134,80 @@ const cancleItem = useMemo(() => {
                   );
                 })} */}
 
-               
-
-               
-              <div className="cancleorderItem">
-                {/* <p className="trackShipment">Track Shipment</p> */}
-                {!item.removeOrder[0].isRemoveOrder ? (
-                  <>
-                   {orderDetails.orderStatus
-                  .filter((od, index) => od.isCompleted)
-                  .slice(-1)
-                  .map((oc, index) => (
+                <div className="cancleorderItem">
+                  {/* <p className="trackShipment">Track Shipment</p> */}
+                  {!item.removeOrder[0].isRemoveOrder ? (
                     <>
-                    <div className="cancleorderItem">
+                      {orderDetails.orderStatus
+                        .filter((od, index) => od.isCompleted)
+                        .slice(-1)
+                        .map((oc, index) => (
+                          <>
+                            <div className="cancleorderItem">
+                              <h1>
+                                {oc.type} on {formatDate2(oc.date)}{" "}
+                              </h1>
+                            </div>
+                            <div className="tracknewDesign">
+                              <div className="orderTrack">
+                                {orderDetails.orderStatus.map((status) => (
+                                  <div
+                                    className={`orderStatus ${
+                                      status.isCompleted ? "active" : ""
+                                    }`}>
+                                    <div
+                                      className={`point ${
+                                        status.isCompleted ? "active" : ""
+                                      }`}></div>
+                                    <div className="orderInfo">
+                                      <div className="status">
+                                        {status.type}
+                                      </div>
+                                      <div className="date">
+                                        {formatDate(status.date)}
+                                      </div>
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                            {oc.type == "shipped" ||
+                            oc.type == "delivered" ? null : (
+                              //  (<>
+                              //    {item.removeOrder[0].isRemoveOrder?('hello'):(
+                              //      <button
+                              //      onClick={() => {
+                              //        typeRef.current = cancleItem.type;
+                              //        onCancleOrder(orderDetails._id, item.productId._id);
+                              //      }}
+                              //    >
+                              //      Cancle Order
+                              //    </button>
+                              //    )}
+                              //  </>)
+                              <button
+                                onClick={() => {
+                                  typeRef.current = cancleItem.type;
+                                  onCancleOrder(
+                                    orderDetails._id,
+                                    item.productId._id
+                                  );
+                                }}>
+                                Cancle Order
+                              </button>
+                            )}
+                          </>
+                        ))}
+                    </>
+                  ) : (
                     <h1>
-                      {oc.type} on {formatDate2(oc.date)}{" "}
+                      Cancelled on {formatDate2(item.removeOrder[0].date)}{" "}
                     </h1>
-                     
-                 
-                   </div>
-                   <div className="tracknewDesign">
-                  <div className="orderTrack">
-                    {orderDetails.orderStatus.map((status) => (
-                      <div
-                        className={`orderStatus ${
-                          status.isCompleted ? "active" : ""
-                        }`}
-                      >
-                        <div
-                          className={`point ${
-                            status.isCompleted ? "active" : ""
-                          }`}
-                        ></div>
-                        <div className="orderInfo">
-                          <div className="status">{status.type}</div>
-                          <div className="date">{formatDate(status.date)}</div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
+                  )}
                 </div>
-                {oc.type=="shipped" || oc.type=="delivered" ? null : 
-                //  (<>
-                //    {item.removeOrder[0].isRemoveOrder?('hello'):(
-                //      <button
-                //      onClick={() => {
-                //        typeRef.current = cancleItem.type;
-                //        onCancleOrder(orderDetails._id, item.productId._id);
-                //      }}
-                //    >
-                //      Cancle Order
-                //    </button>
-                //    )}
-                //  </>)
-                <button
-                     onClick={() => {
-                       typeRef.current = cancleItem.type;
-                       onCancleOrder(orderDetails._id, item.productId._id);
-                     }}
-                   >
-                     Cancle Order
-                   </button>
-}
-                   </>
-                  ))}
-                  </>
-              
-                ) : <h1>Cancelled on {formatDate2(item.removeOrder[0].date)}{" "}</h1>}
-                </div>
-             
               </div>
             </div>
-           
+
             <div className="delTitle mobBorderOrder">
               <h4>Order Summery</h4>
               <h6>OrderId: &nbsp; {orderDetails._id}</h6>

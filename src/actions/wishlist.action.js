@@ -8,10 +8,10 @@ const getWishlistItems = () => {
   return async (dispatch) => {
     try {
       dispatch({ type: wishlistConstants.ADD_TO_WISHLIST_REQUEST });
-      const res = await axios.post(`/user/getWishlistItems`);
+      const res = await axios.get(`/user/getWishlistItems`);
       if (res.status === 200) {
         const { wishlistItems } = res.data;
-        console.log({ getWishlistItems: wishlistItems });
+
         if (wishlistItems) {
           dispatch({
             type: wishlistConstants.ADD_TO_WISHLIST_SUCCESS,
@@ -31,7 +31,6 @@ export const addToWishlist = (product, newQty = 1) => {
       wishlist: { wishlistItems },
       auth,
     } = store.getState();
-    console.log(store.getState(), "stateobject");
     //console.log('action::products', products);
     //const product = action.payload.product;
     //const products = state.products;
@@ -39,45 +38,40 @@ export const addToWishlist = (product, newQty = 1) => {
       ? parseInt(wishlistItems[product._id].qty + newQty)
       : 1;
 
-    console.log(product, "this product");
     wishlistItems[product._id] = {
       ...product,
       qty,
     };
 
+    const payload = {
+      wishlistItems: [
+        {
+          product: product._id,
+          name: product.name,
+          price: product.price,
+          img: product.img,
+          size: product.size,
+          color: product.color,
+          quantity: qty,
+        },
+      ],
+    };
+
     if (auth.authenticate) {
       dispatch({ type: wishlistConstants.ADD_TO_WISHLIST_REQUEST });
-      const payload = {
-        // wishlistItems: Object.keys(wishlistItems).map((key, index) => {
-        //     return {
-        //         quantity: wishlistItems[key].qty,
-        //         product: wishlistItems[key]._id
-        //     }
-        // })
 
-        wishlistItems: [
-          {
-            product: product._id,
-            quantity: qty,
-          },
-        ],
-      };
-      console.log(payload);
       const res = await axios.post(`/user/wishlist/addtowishlist`, payload);
       console.log(res);
+      dispatch({
+        type: wishlistConstants.ADD_TO_WISHLIST_SUCCESS,
+        payload: { wishlistItems },
+      });
       if (res.status === 201) {
         dispatch(getWishlistItems());
       }
     } else {
       localStorage.setItem("wishlist", JSON.stringify(wishlistItems));
     }
-
-    console.log("addToWishlist::", wishlistItems);
-
-    dispatch({
-      type: wishlistConstants.ADD_TO_WISHLIST_SUCCESS,
-      payload: { wishlistItems },
-    });
   };
 };
 
@@ -120,6 +114,11 @@ export const updateWishlist = () => {
             return {
               product: wishlistItems[key]._id,
               quantity: wishlistItems[key].qty,
+              name: wishlistItems[key].name,
+              price: wishlistItems[key].price,
+              img: wishlistItems[key].img,
+              size: wishlistItems[key].size,
+              color: wishlistItems[key].color,
             };
           }),
         };
