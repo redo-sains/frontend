@@ -32,6 +32,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   getAllCategory,
   getCartItems,
+  getWishlistItems,
   login,
   signout,
   signup as _signup,
@@ -127,6 +128,7 @@ export default function PrimarySearchAppBar(props) {
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
   const auth = useSelector((state) => state.auth);
+  const wish = useSelector((state) => state.wishlist);
 
   const userSignup = () => {
     const user = { firstName, lastName, email, password };
@@ -159,6 +161,7 @@ export default function PrimarySearchAppBar(props) {
   useEffect(() => {
     if (auth.authenticate) {
       dispatch(getCartItems());
+      dispatch(getWishlistItems());
 
       setLoginModal(false);
     }
@@ -486,7 +489,10 @@ export default function PrimarySearchAppBar(props) {
 
           <IconButton aria-label="show 2 favorite items" color="inherit">
             <NavLink to="/wishlist">
-              <Badge badgeContent={2} color="secondary">
+              <Badge
+                badgeContent={Object.keys(wish.wishlistItems).length}
+                color="secondary"
+                showZero>
                 <FavoriteBorderOutlined style={{ color: "black" }} />
               </Badge>
             </NavLink>

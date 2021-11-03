@@ -39,7 +39,7 @@ const WishlistItem = (props) => {
             <p>color: {color}</p>
             <button
               className="cartActionBtn"
-              onClick={() => props.onRemoveWishlistItem(_id)}>
+              onClick={() => props.onRemovewishlistItem(_id)}>
               <FaTrashAlt /> Remove
             </button>
             <span className="wishlistPrice">
