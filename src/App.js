@@ -75,7 +75,7 @@ function App() {
           <Route path="/cart" component={CartPage} />
           <PrivateRoute path="/wishlist" component={WishlistPage} />
           <Route path="/forgot-password" component={ForgetPassword} />
-          <Route path="/reset" component={ResetPassword} />
+          <PrivateRoute path="/reset" component={ResetPassword} />
           <Route path="/new-password" component={SignIn} />
 
           <PrivateRoute exact path="/reset-password/:id/:token">

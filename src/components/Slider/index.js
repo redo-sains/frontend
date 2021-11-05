@@ -19,7 +19,7 @@ const Slider = (props) => {
   const randNumber = [];
 
   if (product.products.length) {
-    while (randNumber.length != 5) {
+    while (randNumber.length != 10) {
       const number = Math.floor(Math.random() * product.products.length);
 
       if (randNumber.indexOf(number) === -1) {
@@ -36,6 +36,11 @@ const Slider = (props) => {
   const [img3, setImg3] = useState("");
   const [img4, setImg4] = useState("");
   const [img5, setImg5] = useState("");
+  const [img6, setImg6] = useState("");
+  const [img7, setImg7] = useState("");
+  const [img8, setImg8] = useState("");
+  const [img9, setImg9] = useState("");
+  const [img10, setImg10] = useState("");
 
   useEffect(() => {
     setImg1(product.products[randNumber[0]]);
@@ -43,6 +48,11 @@ const Slider = (props) => {
     setImg3(product.products[randNumber[2]]);
     setImg4(product.products[randNumber[3]]);
     setImg5(product.products[randNumber[4]]);
+    setImg6(product.products[randNumber[5]]);
+    setImg7(product.products[randNumber[6]]);
+    setImg8(product.products[randNumber[7]]);
+    setImg9(product.products[randNumber[8]]);
+    setImg10(product.products[randNumber[9]]);
   }, [product.products[0]]);
 
   console.log("product slider");

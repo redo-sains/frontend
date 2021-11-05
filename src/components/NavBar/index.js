@@ -383,9 +383,9 @@ export default function PrimarySearchAppBar(props) {
           </div>
 
           <div className="logosection">
-            <span>
-              <Link exact to="/" className="logo-mm">
-                <img src={logo} width="40" height="40" alt="" />
+            <span style={{ width: "40px", height: "40px" }}>
+              <Link exact to="/" className="">
+                <img src={logo} alt="" />
               </Link>
             </span>
             {/* <p>Soul by Indian</p> */}
@@ -588,7 +588,7 @@ export default function PrimarySearchAppBar(props) {
                       letterSpacing: "1px",
                       color: "#cb8364",
                     }}
-                    href="/forgot-passord">
+                    href="/forgot-password">
                     Forgot password?
                   </a>
                 </div>
