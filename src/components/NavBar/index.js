@@ -310,14 +310,14 @@ export default function PrimarySearchAppBar(props) {
       <MenuItem onClick={handleMenuClose}>
         New Customer ?{" "}
         <span>
-          <a
+          <p
             onClick={() => {
               setLoginModal(true);
               setSignup(true);
               setAnchorEl(false);
             }}>
             signup
-          </a>
+          </p>
         </span>
       </MenuItem>
       <ul className="mobileViewMenu">
@@ -501,7 +501,6 @@ export default function PrimarySearchAppBar(props) {
         </Toolbar>
       </AppBar>
       {renderMobileMenu}
-      {renderNonLoggedMenu}
       {auth.authenticate ? renderLoggedMenu : renderNonLoggedMenu}
       <Modal visible={loginModal} onClose={() => setLoginModal(false)}>
         <div className="authContainer">
@@ -522,20 +521,20 @@ export default function PrimarySearchAppBar(props) {
                   <div style={{ color: "red", fontSize: 12 }}>{auth.error}</div>
                 )}
                 {signup && (
-                  <MaterialInput
-                    type="text"
-                    label="First Name"
-                    value={firstName}
-                    onChange={(e) => setFirstName(e.target.value)}
-                  />
-                )}
-                {signup && (
-                  <MaterialInput
-                    type="text"
-                    label="Last Name"
-                    value={lastName}
-                    onChange={(e) => setLastName(e.target.value)}
-                  />
+                  <>
+                    <MaterialInput
+                      type="text"
+                      label="First Name"
+                      value={firstName}
+                      onChange={(e) => setFirstName(e.target.value)}
+                    />
+                    <MaterialInput
+                      type="text"
+                      label="Last Name"
+                      value={lastName}
+                      onChange={(e) => setLastName(e.target.value)}
+                    />
+                  </>
                 )}
 
                 <MaterialInput
@@ -575,32 +574,25 @@ export default function PrimarySearchAppBar(props) {
                     }
                   />
                 </div>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    margin: "1rem 0 0 0",
-                  }}>
-                  <a
+                {!signup && (
+                  <div
                     style={{
-                      fontSize: ".8rem",
-                      fontWeight: "700",
-                      letterSpacing: "1px",
-                      color: "#cb8364",
-                    }}
-                    href="/forgot-password">
-                    Forgot password?
-                  </a>
-                </div>
-
-                {/* 
-                                      <GoogleLogin
-                        clientId="800480683042-qdqo4a9hi5dboglr97e4tvmvab0er1lu.apps.googleusercontent.com"
-                        buttonText="Login"
-                        onSuccess={responseGoogle}
-                        onFailure={responseGoogle}
-                        cookiePolicy={'single_host_origin'}
-                      />, */}
+                      display: "flex",
+                      justifyContent: "center",
+                      margin: "1rem 0 0 0",
+                    }}>
+                    <a
+                      style={{
+                        fontSize: ".8rem",
+                        fontWeight: "700",
+                        letterSpacing: "1px",
+                        color: "#cb8364",
+                      }}
+                      href="/forgot-password">
+                      Forgot password?
+                    </a>
+                  </div>
+                )}
               </div>
             </div>
           </div>

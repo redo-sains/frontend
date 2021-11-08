@@ -1,19 +1,20 @@
 /** @format */
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { GiHamburgerMenu } from "react-icons/gi";
+import { sortingProducts } from "../../actions";
+import { useDispatch, useSelector } from "react-redux";
 
 const FilterSortingBar = () => {
-  const viewSorting = [
-    "What's New",
-    "Popularity",
-    "Better Discount",
-    "Price: High to Low",
-    "Price: Low to High",
-    "Customer Rating",
-  ];
+  const dispatch = useDispatch();
+  const product = useSelector((state) => state.product);
+  const viewSorting = ["Price: High to Low", "Price: Low to High"];
   const [stateSort, setSort] = useState("recommended");
+  const [sorted, setSorted] = useState();
 
+  useEffect(() => {
+    dispatch(sortingProducts(sorted, product));
+  }, [sorted]);
   const hamburger = (
     <GiHamburgerMenu
       style={{ fontSize: "2rem", cursor: "pointer", marginRight: "1rem" }}
@@ -21,7 +22,7 @@ const FilterSortingBar = () => {
   );
 
   return (
-    <div className="sortingFiltering show-md">
+    <div className="sortingFiltering show-md z-10">
       <div className="sortingSec">
         {hamburger} <h4 style={{ margin: "0" }}>Filter</h4>
       </div>
@@ -44,6 +45,7 @@ const FilterSortingBar = () => {
               return (
                 <li
                   onClick={() => {
+                    setSorted(e);
                     showSortingList(0);
                     setSort(e.charAt(0) + e.slice(1));
                   }}
