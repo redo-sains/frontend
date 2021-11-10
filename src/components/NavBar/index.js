@@ -41,7 +41,6 @@ import {
 // import Cart from "../UI/Cart";
 
 // import { BiUserCircle } from "react-icons/bi";
-import Data from "./myData.json";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -129,6 +128,7 @@ export default function PrimarySearchAppBar(props) {
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
   const auth = useSelector((state) => state.auth);
   const wish = useSelector((state) => state.wishlist);
+  const product = useSelector((state) => state.product);
 
   const userSignup = () => {
     const user = { firstName, lastName, email, password };
@@ -249,13 +249,6 @@ export default function PrimarySearchAppBar(props) {
       </div>
       <hr />
 
-      {/* <MenuItem onClick={handleMenuClose}><Link to="/dressdetail" >Dress Details</Link> </MenuItem>
-      <MenuItem onClick={handleMenuClose}><Link  to="/kids">Kids</Link> </MenuItem>
-      <MenuItem onClick={handleMenuClose}><Link  to="/men">Men Fashion</Link> </MenuItem>
-      <MenuItem onClick={handleMenuClose}><Link  to="/women">Women Fashion</Link> </MenuItem>
-      <MenuItem onClick={handleMenuClose}><Link  to="/accessories">Accesories</Link> </MenuItem>
-      <MenuItem onClick={handleMenuClose}><Link  to="/portfolio">Portfolio</Link> </MenuItem> */}
-
       <ul className="mobileViewMenu">
         {category.categories.length > 0
           ? MobileRenderCategories(category.categories)
@@ -365,6 +358,10 @@ export default function PrimarySearchAppBar(props) {
 
   const [searchTerm, setSearchTerm] = useState("");
 
+  useEffect(() => {
+    console.log(searchTerm);
+  }, [searchTerm]);
+
   return (
     <div className={classes.grow}>
       <AppBar
@@ -428,24 +425,24 @@ export default function PrimarySearchAppBar(props) {
                   // zIndex: '-1'
                 }}>
                 <ul style={{ margin: "0", padding: "0", listStyle: "none" }}>
-                  {Data.product
+                  {product.products
                     .filter((val) => {
                       if (searchTerm === "") {
                         return null;
                       } else if (
-                        val.Name.toLowerCase().includes(
-                          searchTerm.toLowerCase()
-                        )
+                        val.name
+                          .toLowerCase()
+                          .includes(searchTerm.toLowerCase())
                       ) {
-                        return val.Name;
+                        return val.name;
                       }
                     })
                     .map((item) => (
-                      <li key={item.id}>
+                      <li key={item._id}>
                         <a
-                          href="/"
+                          href={`/${item.slug}/${item._id}/p`}
                           style={{ color: "inherit", textDecoration: "none" }}>
-                          {item.Name}
+                          {item.name}
                         </a>
                       </li>
                     ))}
