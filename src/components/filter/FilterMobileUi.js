@@ -1,10 +1,12 @@
 /** @format */
 
 import { useState, useEffect } from "react";
+import { Redirect } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { GiSettingsKnobs } from "react-icons/gi";
-import { MdSort } from "react-icons/md";
-import { filterProducts, sortingProducts } from "../../actions";
+import { MdSort, MdPlace } from "react-icons/md";
+import { GrClose } from "react-icons/gr";
+import { filterProducts, sortingProducts, getOrdersByPin } from "../../actions";
 
 const color = [
   { Name: "green", _id: "green", Qty: 8792 },
@@ -43,11 +45,16 @@ const sortData = ["Price: High to Low", "Price: Low to High"];
 
 const FilterMobileUi = ({ filter, filterState, setFilter }) => {
   const products = useSelector((state) => state.product);
+  const user = useSelector((state) => state.user);
   const [filterRev, setFilterRev] = useState(false);
   const [sortRev, setSortRev] = useState(false);
   const [checked, setChecked] = useState([]);
   const [sorted, setSorted] = useState();
+  const [pinRev, setPinRev] = useState(false);
+  const [bg, setBg] = useState("text-gray-400");
+  const [pin, setPin] = useState("");
   const dispatch = useDispatch();
+  const [redirect, setRedirect] = useState(false);
 
   const handleToggle = (id) => {
     const currentIndex = checked.indexOf(id);
@@ -62,10 +69,23 @@ const FilterMobileUi = ({ filter, filterState, setFilter }) => {
     setChecked(newChecked);
   };
 
+  const handleSubmit = () => {
+    dispatch(getOrdersByPin({ pinCode: pin }));
+  };
+
   useEffect(() => {
-    // dispatch(getProductsBySlug(match.params.slug));
     dispatch(filterProducts(checked, products));
   }, [checked]);
+
+  useEffect(() => {
+    user.orderPin._id && setRedirect(true);
+  }, [user.orderPin]);
+
+  useEffect(() => {
+    pin.length < 6
+      ? setBg("bg-gray-400 pointer-events-none opacity-70")
+      : setBg("bg-blue-400");
+  }, [pin]);
 
   useEffect(() => {
     dispatch(sortingProducts(sorted, products));
@@ -76,8 +96,47 @@ const FilterMobileUi = ({ filter, filterState, setFilter }) => {
     width: "25px",
   };
 
+  if (redirect === true) {
+    return <Redirect to={`order_details/${user.orderPin._id}`} />;
+  }
   return (
-    <div className="fixed bottom-0 z-20">
+    <div className="z-20">
+      <div className="flex bg-gray-200 w-screen h-14 border-b-4 border-gray-300">
+        <div className="w-1/2 h-full flex items-center pl-3">
+          <GiSettingsKnobs
+            onClick={() => {
+              setFilterRev(!filterRev);
+              setSortRev(false);
+            }}
+            className={filterRev ? "text-gray-700" : "text-gray-400"}
+            style={iconSize}
+          />
+        </div>
+        <div className="w-1/2 h-full flex items-center pl-3">
+          <MdSort
+            onClick={() => {
+              setSortRev(!sortRev);
+              setFilterRev(false);
+            }}
+            className={sortRev ? "text-gray-700" : "text-gray-400"}
+            style={iconSize}
+          />
+        </div>
+      </div>
+      <div className=" bg-gray-200 w-screen h-14 ">
+        <div className="py-3 px-3 md:px-5 sm:px-4 flex items-center justify-between">
+          <div className="text-gray-900 flex items-center">
+            <span className="text-gray-500"> Check Delivery Info</span>
+          </div>
+          <div
+            className="text-blue-500 cursor-pointer"
+            onClick={() => {
+              setPinRev(!pinRev);
+            }}>
+            Enter PinCode
+          </div>
+        </div>
+      </div>
       {filterRev && (
         <div className="w-screen h-80 bg-gray-100">
           {filterData.map((category) => {
@@ -134,28 +193,43 @@ const FilterMobileUi = ({ filter, filterState, setFilter }) => {
           })}
         </div>
       )}
-      <div className="flex bg-gray-200 w-screen h-14 ">
-        <div className="w-1/2 h-full flex items-center pl-3">
-          <GiSettingsKnobs
-            onClick={() => {
-              setFilterRev(!filterRev);
-              setSortRev(false);
-            }}
-            className={filterRev ? "text-gray-700" : "text-gray-400"}
-            style={iconSize}
-          />
+      {pinRev && (
+        <div className="fixed bottom-0" style={{ zIndex: "51" }}>
+          <div className="w-screen h-screen bg-gray-900 opacity-25"></div>
+          <div className="absolute bottom-0 w-screen h-24 bg-gray-200">
+            <div
+              onClick={() => {
+                setPinRev(!pinRev);
+              }}
+              className="absolute top-0 right-0 p-2 text-gray-500 cursor-pointer">
+              <GrClose />
+            </div>
+            <div className="absolute bottom-0 mb-2">
+              <div className=" text-gray-800 font-bold px-3">
+                Use pincode to check delivery info
+              </div>
+              <div className="flex justify-between items-center w-screen px-3">
+                <input
+                  placeholder="Enter pincode"
+                  value={pin}
+                  onChange={(e) => {
+                    const result = e.target.value.search(/^$|^[0-9]+$/);
+                    if (result === 0 && e.target.value.length < 7) {
+                      setPin(e.target.value);
+                    }
+                  }}
+                  className="rounded pl-2 border-gray-600 bg-gray-50 outline-none"
+                />
+                <div
+                  className={`rounded ${bg} text-gray-100 px-2 py-1 cursor-pointer`}
+                  onClick={() => handleSubmit()}>
+                  Submit
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div className="w-1/2 h-full flex items-center pl-3">
-          <MdSort
-            onClick={() => {
-              setSortRev(!sortRev);
-              setFilterRev(false);
-            }}
-            className={sortRev ? "text-gray-700" : "text-gray-400"}
-            style={iconSize}
-          />
-        </div>
-      </div>
+      )}
     </div>
   );
 };

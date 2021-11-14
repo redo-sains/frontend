@@ -74,8 +74,18 @@ const ClothingAndAccessories = (props) => {
         setFilterReveal={setFilterReveal}
         filterRevealState={filterRevealState}
       />
-      <div className="ProductsContainer">
-        <div className="overflow-hidden">
+      <div className="ProductsContainer relative">
+        {width < 800 && (
+          <>
+            <FilterMobileUi
+              products={product}
+              filter={filter}
+              filterState={filterState}
+              setFilter={setFilter}
+            />
+          </>
+        )}
+        <div className="overflow-hidden relative">
           <div
             className={
               width < 800
@@ -115,16 +125,6 @@ const ClothingAndAccessories = (props) => {
               </div>
             </div>
           </div>
-          {width < 800 && (
-            <>
-              <FilterMobileUi
-                products={product}
-                filter={filter}
-                filterState={filterState}
-                setFilter={setFilter}
-              />
-            </>
-          )}
         </div>
 
         {/* <SortingMobile /> */}

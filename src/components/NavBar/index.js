@@ -358,9 +358,7 @@ export default function PrimarySearchAppBar(props) {
 
   const [searchTerm, setSearchTerm] = useState("");
 
-  useEffect(() => {
-    console.log(searchTerm);
-  }, [searchTerm]);
+  const [searchReveal, setSearchReveal] = useState(false);
 
   return (
     <div className={classes.grow}>
@@ -414,40 +412,52 @@ export default function PrimarySearchAppBar(props) {
                 }}
                 inputProps={{ "aria-label": "search" }}
                 onChange={(e) => setSearchTerm(e.target.value)}
+                onFocus={() => {
+                  setSearchReveal(true);
+                }}
+                onBlur={() => {
+                  setSearchReveal(false);
+                }}
               />
-              <div
-                style={{
-                  position: "absolute",
-                  top: "90%",
-                  left: "0",
-                  width: "100%",
-                  backgroundColor: "#fff",
-                  // zIndex: '-1'
-                }}>
-                <ul style={{ margin: "0", padding: "0", listStyle: "none" }}>
-                  {product.products
-                    .filter((val) => {
-                      if (searchTerm === "") {
-                        return null;
-                      } else if (
-                        val.name
-                          .toLowerCase()
-                          .includes(searchTerm.toLowerCase())
-                      ) {
-                        return val.name;
-                      }
-                    })
-                    .map((item) => (
-                      <li key={item._id}>
-                        <a
-                          href={`/${item.slug}/${item._id}/p`}
-                          style={{ color: "inherit", textDecoration: "none" }}>
-                          {item.name}
-                        </a>
-                      </li>
-                    ))}
-                </ul>
-              </div>
+              {searchReveal && (
+                <div
+                  style={{
+                    position: "absolute",
+                    top: "90%",
+                    left: "0",
+                    width: "100%",
+                    backgroundColor: "#fff",
+                    display: {},
+                  }}>
+                  <ul style={{ margin: "0", padding: "0", listStyle: "none" }}>
+                    {product.products
+                      .filter((val) => {
+                        if (searchTerm === "") {
+                          return null;
+                        } else if (
+                          val.name
+                            .toLowerCase()
+                            .includes(searchTerm.toLowerCase())
+                        ) {
+                          return val.name;
+                        }
+                      })
+                      .map((item) => (
+                        <li key={item._id} className="hover:bg-gray-200">
+                          <a
+                            className="pl-3 py-1"
+                            href={`/${item.slug}/${item._id}/p`}
+                            style={{
+                              color: "inherit",
+                              textDecoration: "none",
+                            }}>
+                            {item.name}
+                          </a>
+                        </li>
+                      ))}
+                  </ul>
+                </div>
+              )}
             </div>
           </div>
 

@@ -140,11 +140,10 @@ export const getOrder = (payload) => {
       const res = await axios.post(`/getOrder`, payload);
       dispatch({ type: userConstants.GET_USER_ORDER_DETAILS_REQUEST });
       if (res.status === 200) {
-        console.log(res);
-        const { order } = res.data;
+        const { order, hasItem } = res.data;
         dispatch({
           type: userConstants.GET_USER_ORDER_DETAILS_SUCCESS,
-          payload: { order },
+          payload: { order, hasItem },
         });
       } else {
         const { error } = res.data;
@@ -159,4 +158,27 @@ export const getOrder = (payload) => {
   };
 };
 
-export const forgotPassword = () => {};
+export const getOrdersByPin = (payload) => {
+  return async (dispatch) => {
+    const { pinCode } = payload;
+    try {
+      const res = await axios.post("/getOrdersByPin", { pinCode });
+      console.log(res);
+      dispatch({ type: userConstants.GET_USER_ORDER_BY_PIN_REQUEST });
+      if (res.status === 200) {
+        dispatch({
+          type: userConstants.GET_USER_ORDER_BY_PIN_SUCCESS,
+          payload: { order: res.data.order },
+        });
+      }
+
+      if (res.status === 400) {
+        dispatch({
+          type: userConstants.GET_USER_ORDER_BY_PIN_FAILED,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
